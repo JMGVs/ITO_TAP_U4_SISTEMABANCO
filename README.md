@@ -73,7 +73,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
 ![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/9bb18424-6aa6-4ffc-9811-b570a6c1ce15)
 
  **El JDBC Es:** JDBC (Java Database Connectivity) es una API de Java que permite a los desarrolladores de aplicaciones Java conectarse a bases de datos.
- 
+ ```java
   private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
         try {
             Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/banco", "root", "zorrito21");
@@ -108,6 +108,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
        
     }                                        
 }
+```
 **Este codigo pertenece cuando el usuario pulsa el boton continuar**: Realiza una conexión a la base de datos MySQL utilizando JDBC y verifica si hay un ejecutivo con el ID especificado en el campo txtNumGerente. Luego, compara la clave ingresada en el campo jPasswordField1 con la clave almacenada en la base de datos. Si la clave coincide, avanza a la siguiente  ` Vista Ejecutivo `. Si la clave no coincide o no se encuentra ningún ejecutivo con el ID especificado, muestra un mensaje de error correspondiente.
 
    ```java
