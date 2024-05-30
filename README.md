@@ -1,1 +1,3 @@
 # ITO_TAP_U4_SISTEMABANCO
+#  Decripcion
+En  la implementación del Sistema Modelo Vista Controlador (MVC) denominado "banco", se ha diseñado una aplicación que facilita la gestión integral de usuarios, incluyendo tanto clientes como ejecutivos y gerentes, mediante cuentas específicas para cada tipo de usuario.En cuanto a la gestión de la información de usuarios, ejecutivos y gerentes, todos los datos se almacenan de manera segura en una base de datos. Cada tipo de usuario tiene sus propios datos asociados, los cuales se gestionan de manera separada dentro del modelo de la aplicación. Esto permite un manejo eficiente de la información y una clara separación de responsabilidades entre los diferentes tipos de usuarios.
