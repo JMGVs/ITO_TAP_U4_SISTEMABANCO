@@ -72,8 +72,54 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
 
 ![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/9bb18424-6aa6-4ffc-9811-b570a6c1ce15)
 
+ **El JDBC Es:** JDBC (Java Database Connectivity) es una API de Java que permite a los desarrolladores de aplicaciones Java conectarse a bases de datos.
+ 
+  private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
+        try {
+            Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/banco", "root", "zorrito21");
+            PreparedStatement consulta = conexion.prepareStatement("SELECT * FROM ejecutivo WHERE id_ejecutivo = ?");
+            consulta.setString(1, txtNumGerente.getText().trim());
+            ResultSet rs = consulta.executeQuery();
+            if (rs.next()) {
+                String clave = rs.getString("clave");
+                if (clave.equals(jPasswordField1.getText().trim())) {
 
+                    InicioGe.setVisible(true);
 
+                    if (InicioGe.getBotonPulsado() == 0) {
+                        txtNumGerente.setText("");
+                    } else {
+                        txtNumGerente.setText("");
+                    }
+
+                } else {
+
+                    JOptionPane.showMessageDialog(this, "Clave incorrecta", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+
+                JOptionPane.showMessageDialog(this, "No se encontró ningún ejecutivo con el ID especificado", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+       
+    }                                        
+}
+**Este codigo pertenece cuando el usuario pulsa el boton continuar**: Realiza una conexión a la base de datos MySQL utilizando JDBC y verifica si hay un ejecutivo con el ID especificado en el campo txtNumGerente. Luego, compara la clave ingresada en el campo jPasswordField1 con la clave almacenada en la base de datos. Si la clave coincide, avanza a la siguiente  ` Vista Ejecutivo `. Si la clave no coincide o no se encuentra ningún ejecutivo con el ID especificado, muestra un mensaje de error correspondiente.
+
+   ```java
+    private void jPasswordField1MousePressed(java.awt.event.MouseEvent evt) {                                             
+        
+        jPasswordField1.setText("");
+    }               
+```
+**Este método se llama cuando se presiona el mouse en el campo de contraseña jPasswordField1**. Borra el texto actual en el campo para permitir al usuario ingresar una nueva contraseña.
 ## Ventana De Inicio De Ejecutivo
 
+
+ **El JDBC Es:** JDBC (Java Database Connectivity) es una API de Java que permite a los desarrolladores de aplicaciones Java conectarse a bases de datos.
+ 
 ![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/44ab0df5-b0a0-4918-bd4a-51034fd0e010)
