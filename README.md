@@ -68,7 +68,7 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
 **Este codigo Pertenece**: Los usuarios que pertenescan a Ejecutivos deberan presionar este boton y los llevara a la  ` Ventana De Ejecutivos` `. 
 
     
-## Ventana De Inicio De Gerente
+## Ventana De Inicio De Ejecutivo
 
 ![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/9bb18424-6aa6-4ffc-9811-b570a6c1ce15)
 
@@ -118,9 +118,303 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
     }               
 ```
 **Este método se llama cuando se presiona el mouse en el campo de contraseña jPasswordField1**. Borra el texto actual en el campo para permitir al usuario ingresar una nueva contraseña.
-## Ventana De Inicio De Ejecutivo
+## Ventana De Inicio De Gerente
 
 
  **El JDBC Es:** JDBC (Java Database Connectivity) es una API de Java que permite a los desarrolladores de aplicaciones Java conectarse a bases de datos.
  
 ![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/44ab0df5-b0a0-4918-bd4a-51034fd0e010)
+
+```java
+  try {
+            Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/banco", "root", "zorrito21");
+            PreparedStatement consulta = conexion.prepareStatement("SELECT * FROM gerente WHERE id_gerente = ?");
+            consulta.setString(1, jTextField1.getText().trim());
+            ResultSet rs = consulta.executeQuery();
+            if (rs.next()) {
+                String clave = rs.getString("Clave");
+                if (clave.equals(jPasswordField2.getText().trim())) {
+                    inicioGerente.setVisible(true);
+
+                    if (inicioGerente.getBotonPulsado() == 0) {
+                        lblRegistro.setText("");
+                    } else {
+                        lblRegistro.setText("");
+                    }
+
+                } else {
+
+                    JOptionPane.showMessageDialog(this, "Clave incorrecta", "Error", JOptionPane.ERROR_MESSAGE);
+                }
+            } else {
+
+                JOptionPane.showMessageDialog(this, "No se encontró ningún ejecutivo con el ID especificado", "Error", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (Exception e) {
+
+            e.printStackTrace();
+        }
+
+    }
+```
+**Este codigo pertenece cuando el usuario pulsa el boton continuar**: Realiza una conexión a la base de datos MySQL utilizando JDBC y verifica si hay un ejecutivo con el ID especificado en el campo txtNumGerente. Luego, compara la clave ingresada en el campo jPasswordField1 con la clave almacenada en la base de datos. Si la clave coincide, avanza a la siguiente  ` Vista Gerente `. Si la clave no coincide o no se encuentra ningún gerente con el ID especificado, muestra un mensaje de error correspondiente.
+
+## Ventana Opciones De Genrente y ejecutivo
+
+
+![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/70042e87-2cab-469b-ab14-00d26f67bf7e)      ![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/3cdceada-ab3a-452c-a5e8-63842f803fb7)
+
+```java
+private void lblTramiteMousePressed(java.awt.event.MouseEvent evt) {                                        
+//BotonPulsado = 0;
+//this.dispose();
+Tramites tramites = new Tramites(new javax.swing.JFrame(), true);
+
+tramites.setVisible(true);
+
+if(tramites.getBotonPulsado()==0){
+    lblTramite.setText("");
+} else {
+    lblTramite.setText("");
+}
+        // TODO add your handling code here:
+    }                                       
+
+    private void lblNuevoClienteMousePressed(java.awt.event.MouseEvent evt) {                                             
+//BotonPulsado = 0;
+//this.dispose();
+NuevoCliente ventanaCliente = new NuevoCliente(new javax.swing.JFrame(), true);
+
+ventanaCliente.setVisible(true);
+if(ventanaCliente.getBotonPulsado()==0){
+    lblNuevoCliente.setText("");
+} else {
+    lblNuevoCliente.setText("");
+}
+        // TODO add your handling code here:
+    }                                            
+
+    private void lblBajaMousePressed(java.awt.event.MouseEvent evt) {                                     
+//BotonPulsado = 0;
+//this.dispose();
+Tabla bajaCliente = new Tabla(new javax.swing.JFrame(), true);
+
+bajaCliente.setVisible(true);
+if(bajaCliente.getBotonPulsado()==0){
+    lblBaja.setText("");
+} else {
+    lblBaja.setText("");
+}
+        // TODO add your handling code here:
+    }
+
+```
+**Action de botones de imagenes**:Cada boton tiene un action  en este caso tiene un evento llamado MausePreseend al momento de pulsar una imagen cada una va a abrir un menu distinto la unica diferencia entre ambos menus es que el gerente puede agregar nuevo Ejecutivos
+
+
+## Menu Nuevo cliente
+
+![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/61a55fda-495b-40c4-b67f-c847fc743a50)
+
+**El método generarContratoPDF:** se encarga de crear un archivo PDF que contiene un contrato bancario con información del cliente y del banco. Aquí están los pasos principales del método:
+**Definir Ruta Del Archivo:**:Se obtiene el directorio del escritorio del usuario y se define la ruta completa donde se guardará el archivo PDF.
+```java
+String userHome = System.getProperty("user.home");
+String desktopPath = userHome + File.separator + "Desktop";
+String dest = desktopPath + File.separator + nombreArchivo;
+```
+
+**Crear un Nuevo Documento::** Se crea una instancia de la clase Document de iText, que representará el PDF.
+```java
+Document document = new Document();
+
+```
+
+
+**Inicializar el Escritor de PDF:** Se inicializa un PdfWriter para escribir en el archivo especificado. Luego, se abre el documento para poder agregar contenido.
+```java
+PdfWriter.getInstance(document, new FileOutputStream(dest));
+document.open();
+
+
+```
+**Agregar Contenido al Documento:** Se define una fuente para el título y se agrega al documento.
+```java
+Font fontTitulo = FontFactory.getFont(FontFactory.HELVETICA_BOLD, 16);
+document.add(new Paragraph("Contrato de Servicios Bancarios", fontTitulo));
+
+
+```
+
+**Agregar Información del Cliente y del Contrato:** Se agregan párrafos al documento que incluyen los detalles del contrato, como los datos personales del cliente, información bancaria y condiciones del contrato.
+```java
+document.add(new Paragraph("Entre Unibanco, en adelante \"el Banco\", y el Sr./Sra. " + nombreCliente +
+        ", con número de identificación: " + numerodocumento + " en adelante \"el Cliente\", se establecen las siguientes condiciones:"));
+document.add(new Paragraph("1. **Datos Personales del Cliente:**"));
+document.add(new Paragraph("   - Nombre Completo: " + nombreCliente));
+document.add(new Paragraph("   - Apellido Paterno: " + apellidoPaterno));
+document.add(new Paragraph("   - Apellido Materno: " + apellidoMaterno));
+document.add(new Paragraph("   - Domicilio: " + direccion));
+document.add(new Paragraph("   - Correo Electrónico: " + correoElectronico));
+document.add(new Paragraph("2. **Número de Cliente:**"));
+document.add(new Paragraph("   - Número de Cliente: " + idClienteGenerado));
+document.add(new Paragraph("3. **Datos Bancarios:**"));
+document.add(new Paragraph("   - Fecha de Ingreso al Banco: " + fechaRegistro));
+document.add(new Paragraph("   - Número de Tarjeta Bancaria: " + numeroTarjeta));
+document.add(new Paragraph("   - Fecha de Expiración de la Tarjeta: " + fechaExpiracion));
+document.add(new Paragraph("4. **Saldo:**" + monto));
+document.add(new Paragraph("   - El Cliente se compromete a mantener un saldo mínimo en su cuenta bancaria según lo establecido por Unibanco."));
+document.add(new Paragraph("   - El Cliente podrá realizar depósitos, retiros y transferencias de fondos según los servicios ofrecidos por Unibanco."));
+document.add(new Paragraph("   - El Banco se reserva el derecho de cobrar tarifas por ciertos servicios bancarios, las cuales serán informadas al Cliente previamente."));
+document.add(new Paragraph("5. **Seguridad de la Información:**"));
+document.add(new Paragraph("   - El Cliente se compromete a mantener la confidencialidad de su información bancaria, incluyendo su número de tarjeta y clave secreta."));
+document.add(new Paragraph("   - Unibanco implementará medidas de seguridad para proteger la información del Cliente, pero no se responsabilizará por pérdidas causadas por el uso no autorizado de la cuenta."));
+document.add(new Paragraph("6. **Plazo del Contrato:**"));
+document.add(new Paragraph("   - El presente contrato entrará en vigor a partir de la fecha de su firma y tendrá una duración indefinida, salvo que sea rescindido por alguna de las partes de acuerdo con lo establecido en la ley."));
+document.add(new Paragraph("7. **Legislación Aplicable:**"));
+document.add(new Paragraph("   - Este contrato se regirá e interpretará de acuerdo con las leyes del [País], y cualquier disputa relacionada con este contrato estará sujeta a la jurisdicción exclusiva de los tribunales de [Ciudad, País]."));
+
+
+```
+**Cerrar el Documento:** Se cierra el documento para finalizar la escritura del archivo PDF.
+```java
+document.close();
+
+```
+
+**Mostrar Mensaje de Confirmación:** Se muestra un mensaje emergente confirmando que el contrato se ha generado correctamente.
+```java
+JOptionPane.showMessageDialog(null, "Contrato bancario generado en el escritorio.");
+
+```
+**Manejo de Excepciones:** Si ocurre un error durante la generación del PDF, se captura la excepción, se muestra un mensaje de error y se imprime la traza de la pila.
+```java
+} catch (IOException | DocumentException e) {
+    JOptionPane.showMessageDialog(null, "Error al generar el archivo PDF: " + e.getMessage());
+    e.printStackTrace();
+    return null; 
+}
+
+```
+## Funcionamineto de Email
+**Obtener el correo del destinatario y establecer el asunto::** Este bloque obtiene el correo electrónico del destinatario desde un campo de texto (correo) y establece el asunto del correo.
+
+```java
+emailTo = correo.getText().trim();
+subject = "Contrato de Unibanco";
+
+
+```
+
+**Configurar las propiedades del protocolo Simple Mail Transfer Protocol (SMTP):** Aquí se configuran las propiedades necesarias para conectarse al servidor SMTP de Gmail, incluyendo el host, el puerto, y las opciones de autenticación y seguridad.
+
+```java
+mProperties.put("mail.smtp.host", "smtp.gmail.com");
+mProperties.put("mail.smtp.ssl.trust", "smtp.gmail.com");
+mProperties.setProperty("mail.smtp.starttls.enable", "true");
+mProperties.setProperty("mail.smtp.port", "587");
+mProperties.setProperty("mail.smtp.user", emailFrom);
+mProperties.setProperty("mail.smtp.ssl.protocols", "TLSv1.2");
+mProperties.setProperty("mail.smtp.auth", "true");
+
+```
+
+**Inicializar la sesión de correo::** Se inicializa una sesión de correo con las propiedades configuradas anteriormente.
+
+```java
+mSession = Session.getDefaultInstance(mProperties);
+
+
+```
+
+**Crear el mensaje de correo::**  Este bloque crea un nuevo mensaje de correo (MimeMessage), establece el remitente, el destinatario y el asunto del correo.
+
+```java
+try {
+    mCorreo = new MimeMessage(mSession);
+    mCorreo.setFrom(new InternetAddress(emailFrom));
+    mCorreo.setRecipient(Message.RecipientType.TO, new InternetAddress(emailTo));
+    mCorreo.setSubject(subject);
+
+```
+
+
+**Agregar el cuerpo del mensaje::** Aquí se crea el cuerpo del mensaje principal, se establece el texto y se añade a un contenedor multipart para manejar múltiples partes del mensaje.
+```java
+    BodyPart messageBodyPart = new MimeBodyPart();
+    messageBodyPart.setText("Por favor, encuentre adjunto el contrato bancario.");
+    Multipart multipart = new MimeMultipart();
+    multipart.addBodyPart(messageBodyPart);
+
+
+```
+
+**Adjuntar el contrato PDF::** En este bloque se crea una nueva parte del mensaje para adjuntar el archivo PDF generado. El archivo se adjunta y se añade al contenedor multipart. Finalmente, el contenido del mensaje se establece como el contenedor multipart.
+
+```java
+    messageBodyPart = new MimeBodyPart();
+    String filename = generarContratoPDF("contrato_bancario.pdf");
+    DataSource source = new FileDataSource(filename);
+    messageBodyPart.setDataHandler(new DataHandler(source));
+    messageBodyPart.setFileName(new File(filename).getName());
+    multipart.addBodyPart(messageBodyPart);
+    mCorreo.setContent(multipart);
+} catch (AddressException ex) {
+    Logger.getLogger(NuevoCliente.class.getName()).log(Level.SEVERE, null, ex);
+} catch (MessagingException ex) {
+    Logger.getLogger(NuevoCliente.class.getName()).log(Level.SEVERE, null, ex);
+}
+
+
+```
+## Metodo SendEmail
+**Enviar el correo:** Este método se encarga de enviar el correo electrónico. Se obtiene un objeto Transport de la sesión, se conecta usando las credenciales del remitente (emailFrom y passwordFrom), se envía el mensaje y luego se cierra la conexión
+
+```java
+dtry {
+    Transport mTransport = mSession.getTransport("smtp");
+    mTransport.connect(emailFrom, passwordFrom);
+    mTransport.sendMessage(mCorreo, mCorreo.getRecipients(Message.RecipientType.TO));
+    mTransport.close();
+} catch (NoSuchProviderException ex) {
+    Logger.getLogger(NuevoCliente.class.getName()).log(Level.SEVERE, null, ex);
+} catch (MessagingException ex) {
+    Logger.getLogger(NuevoCliente.class.getName()).log(Level.SEVERE, null, ex);
+}
+
+
+```
+
+**Validar el formato del correo electrónico:** Este método usa una expresión regular para asegurarse de que el correo electrónico tenga un formato válido y pertenezca a uno de los dominios especificados (hotmail, gmail, yahoo, outlook). La función devuelve true si el correo es válido y false en caso contrario.
+
+```java
+Pattern pattern = Pattern.compile("(\\W|^)[\\w.\\-]{0,25}@(hotmail|gmail|yahoo|outlook)\\.com(\\W|$)");
+Matcher matcher = pattern.matcher(correo);
+return matcher.find();
+
+```
+**Validar la longitud del NIP:**Este método verifica que el NIP (Número de Identificación Personal) tenga exactamente 6 caracteres, devolviendo true si cumple esta condición y false si no.
+```java
+return nip.length() == 6;
+```
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
