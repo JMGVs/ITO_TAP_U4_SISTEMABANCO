@@ -470,6 +470,8 @@ try {
     );
 
 ```
+## Tramite
+![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/5adae539-37e7-4b54-a218-93a9cb58fda3)
 
 **Rellenar y ejecutar la consulta de cliente:** Se rellenan los valores en la consulta de cliente y se ejecuta la inserción. Luego se obtiene el id_cliente generado automáticamente.
 
@@ -555,8 +557,78 @@ try {
 
 
 
+## Ventana De Tramites
 
 
+**Establecimiento de la conexión a la base de datos:** Aquí se está estableciendo una conexión a una base de datos MySQL llamada "banco" en el localhost (la misma máquina donde se está ejecutando el código). Se está utilizando el usuario "root" sin contraseña
+
+```java
+        Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/banco", "root", "");
+
+
+```
+
+
+**Preparación y ejecución de consultas SQL:** Se está preparando y ejecutando una consulta SQL para seleccionar datos de la tabla "cliente" donde el campo "id_cliente" sea igual al valor proporcionado en un campo de texto llamado "jTextField11".
+
+```java
+   PreparedStatement consulta = conexion.prepareStatement("SELECT * from cliente WHERE id_cliente = ?");
+consulta.setString(1, jTextField11.getText().trim());
+ResultSet rs = consulta.executeQuery();
+
+
+```
+
+
+**Generar el contrato PDF y enviar el correo electrónico:** Se genera un número de documento aleatorio, se crea el contrato en formato PDF y, si se genera correctamente, se prepara y envía un correo electrónico con el contrato adjunto.
+
+```java
+        numerodocumento = (int)(Math.random() * (max - min + 1)) + min;
+    String contratoPDF = generarContratoPDF("contrato_bancario.pdf");
+
+    if (contratoPDF != null) {
+        createEmail();
+        sendEmail();
+    } else {
+        JOptionPane.showMessageDialog(null, "Error al generar el contrato bancario.");
+    }
+
+```
+
+
+**Extracción de datos y llenado de campos de texto::** Se están extrayendo datos del ResultSet y estableciendo el texto en varios campos de texto en la interfaz de usuario
+
+```java
+   txtNombre.setText(rs.getString("nombre"));
+
+  
+
+```
+
+
+**Generación de valores aleatorios para una nueva tarjeta:**Se prepara y ejecuta una consulta para insertar una nueva fila en la tabla "tarjeta". Se establecen los valores de las columnas utilizando los valores aleatorios generados anteriormente. 
+
+```java
+      PreparedStatement consulta3 = conexion.prepareStatement("INSERT INTO tarjeta (credito, tarjetaCredito, limite) VALUES (?, ?, ?)");
+consulta3.setBoolean(1, true);
+consulta3.setLong(2, numeroTarjeta);
+consulta3.setInt(3, limiteAleatorio);
+int filasAfectadas = consulta3.executeUpdate();
+
+
+
+```
+
+**Manejo de excepciones:** Se capturan y manejan excepciones que puedan ocurrir durante la ejecución del código. Se muestra un mensaje de error con detalles sobre la excepción y se imprime el stack trace para depuración.
+
+```java
+       } catch (Exception e) {
+    JOptionPane.showMessageDialog(this, "Error al consultar datos: " + e.getMessage(), "Error", JOptionPane.ERROR_MESSAGE);
+    e.printStackTrace();
+}
+
+
+```
 
 
 
