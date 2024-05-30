@@ -36,7 +36,7 @@ En la implementación del Sistema Modelo Vista Controlador (MVC) denominado "ban
 }
 ```
 
-**Constructor del Codigo**: Este constructor inicializa el diálogo de ingreso y crea instancias de los diálogos de inicio de gerente y general. 
+**Constructor del Codigo**: En este constructor crea 2 instancias de los diálogos de inicio de `Gerente` y `Ejecutivo`. 
 ```java
 private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {                                         
     Ingreso.setVisible(true);
@@ -48,6 +48,9 @@ private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {
     }
 }                                        
 ```
+
+**Este codigo Pertenece**: Los usuarios que pertenescan a Gerentes deberan presionar este boton y los llevara a la  ` Ventana De Gerente` `. 
+
 ```java
 private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {                                         
     Inicio.setVisible(true);
@@ -61,5 +64,16 @@ private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {
 
 }
 ```
-```
+
+**Este codigo Pertenece**: Los usuarios que pertenescan a Ejecutivos deberan presionar este boton y los llevara a la  ` Ventana De Ejecutivos` `. 
+
     
+## Ventana De Inicio De Gerente
+
+![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/9bb18424-6aa6-4ffc-9811-b570a6c1ce15)
+
+
+
+## Ventana De Inicio De Ejecutivo
+
+![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/44ab0df5-b0a0-4918-bd4a-51034fd0e010)
