@@ -393,9 +393,164 @@ Matcher matcher = pattern.matcher(correo);
 return matcher.find();
 
 ```
-**Validar la longitud del NIP:**Este método verifica que el NIP (Número de Identificación Personal) tenga exactamente 6 caracteres, devolviendo true si cumple esta condición y false si no.
+**Validar la longitud del NIP:** Este método verifica que el NIP (Número de Identificación Personal) tenga exactamente 6 caracteres, devolviendo true si cumple esta condición y false si no.
 ```java
 return nip.length() == 6;
+```
+
+## Acción del botón Cuando pulsa Generar
+
+**Este método se activa cuando el usuario hace clic en el botón asociado y realiza una serie de acciones para guardar los datos del cliente, generar un contrato PDF y enviar un correo electrónico.**
+
+**Obtener y validar los datos del formulario::** Aquí se obtienen los datos ingresados por el usuario en el formulario.
+```java
+try {
+    nombreCliente = nombre.getText().trim();
+    apellidoPaterno = paterno.getText().trim();
+    apellidoMaterno = materno.getText().trim();
+    correoElectronico = correo.getText().trim();
+    nip = pasword.getText().trim();
+    monto = Double.parseDouble(mo.getText().trim());
+    telefono = nombre1.getText().trim();
+    direccion = mo1.getText().trim();
+    fechaExpiracion = "2026-05-27";
+
+
+
+```
+
+**Aquí se obtienen los datos ingresados por el usuario en el formulario.:** 
+```java
+    String tipoCuenta = jComboBox1.getSelectedItem().equals("Ahorro") ? "Ahorros" : "Corriente";
+
+```
+
+
+**Se obtiene el tipo de cuenta seleccionada por el usuario y se asigna el valor correspondiente.:** 
+
+```java
+       String tipoCuenta = jComboBox1.getSelectedItem().equals("Ahorro") ? "Ahorros" : "Corriente";
+
+
+```
+
+
+**Se valida el correo electrónico, el NIP y el monto mínimo. Si alguna validación falla, se muestra un mensaje de error y se sale del método.:**
+
+```java
+    if (!validarCorreo(correoElectronico) || !validarNIP(nip) || monto < 2000) {
+        JOptionPane.showMessageDialog(null, "Los datos ingresados son inválidos.");
+        return;
+    }
+
+
+```
+
+**Obtener la fecha actual y formatearla::** Se obtiene la fecha actual y se formatea en el formato yyyy-MM-dd.
+
+```java
+    Date fechaActual = new Date();
+    SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+    fechaRegistro = formatoFecha.format(fechaActual);
+
+
+
+```
+
+**Conectar a la base de datos y preparar consultas SQL:** Se establece una conexión a la base de datos y se preparan las consultas SQL para insertar datos en las tablas Cliente y tarjeta.
+
+```java
+    Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/banco", "root", "");
+    PreparedStatement consultaCliente = conexion.prepareStatement(
+        "INSERT INTO Cliente (id_cliente, nombre, apellido_paterno, apellido_materno, email, telefono, direccion, fecha_registro, tipo_cuenta, saldo, NIP) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)",
+        Statement.RETURN_GENERATED_KEYS
+    );
+    PreparedStatement consultaTarjeta = conexion.prepareStatement(
+        "INSERT INTO tarjeta (numero_tarjeta, fecha_emision, fecha_expiracion, saldo_disponible, cliente_id, credito,tarjetaCredito,limite) VALUES (?, ?, ?, ?, ?, ?,?,?)"
+    );
+
+```
+
+**Rellenar y ejecutar la consulta de cliente:** Se rellenan los valores en la consulta de cliente y se ejecuta la inserción. Luego se obtiene el id_cliente generado automáticamente.
+
+```java
+      consultaCliente.setString(1, "0");
+    consultaCliente.setString(2, nombreCliente);
+    consultaCliente.setString(3, apellidoPaterno);
+    consultaCliente.setString(4, apellidoMaterno);
+    consultaCliente.setString(5, correoElectronico);
+    consultaCliente.setString(6, telefono);
+    consultaCliente.setString(7, direccion);
+    consultaCliente.setString(8, fechaRegistro);
+    consultaCliente.setString(9, tipoCuenta);
+    consultaCliente.setDouble(10, monto);
+    consultaCliente.setString(11, nip);
+    consultaCliente.executeUpdate();
+
+    ResultSet generatedKeys = consultaCliente.getGeneratedKeys();
+    if (generatedKeys.next()) {
+        idClienteGenerado = generatedKeys.getInt(1);
+    }
+
+
+```
+
+
+**Rellenar y ejecutar la consulta de tarjeta:** Se genera un número de tarjeta aleatorio y se rellenan los valores en la consulta de tarjeta. Luego se ejecuta la inserción.
+
+```java
+       numeroTarjeta = (long) (Math.random() * 10000000000000000L);
+    consultaTarjeta.setLong(1, numeroTarjeta);
+    consultaTarjeta.setString(2, fechaRegistro);
+    consultaTarjeta.setString(3, fechaExpiracion);
+    consultaTarjeta.setDouble(4, monto);
+    consultaTarjeta.setInt(5, idClienteGenerado);
+    consultaTarjeta.setBoolean(6, false);
+    consultaTarjeta.setInt(7, 0);
+    consultaTarjeta.setInt(8, 0);
+    consultaTarjeta.executeUpdate();
+
+
+```
+**Generar el contrato PDF y enviar el correo electrónico:** Se genera un número de documento aleatorio, se crea el contrato en formato PDF y, si se genera correctamente, se prepara y envía un correo electrónico con el contrato adjunto.
+
+```java
+        numerodocumento = (int)(Math.random() * (max - min + 1)) + min;
+    String contratoPDF = generarContratoPDF("contrato_bancario.pdf");
+
+    if (contratoPDF != null) {
+        createEmail();
+        sendEmail();
+    } else {
+        JOptionPane.showMessageDialog(null, "Error al generar el contrato bancario.");
+    }
+
+```
+
+**Limpiar los campos del formulario y cerrar recursos::** Se limpian los campos del formulario y se muestran mensajes de confirmación o error. Finalmente, se cierran los recursos de base de datos para liberar memoria.
+
+
+```java
+       nombre.setText("");
+    paterno.setText("");
+    materno.setText("");
+    mo.setText("");
+    correo.setText("");
+    pasword.setText("");
+
+    JOptionPane.showMessageDialog(null, "Datos guardados correctamente.");
+
+    generatedKeys.close();
+    consultaTarjeta.close();
+    consultaCliente.close();
+    conexion.close();
+} catch (NumberFormatException e) {
+    JOptionPane.showMessageDialog(null, "El monto ingresado es inválido.");
+} catch (SQLException e) {
+    JOptionPane.showMessageDialog(null, "Error al guardar los datos en la base de datos: " + e.getMessage());
+}
+
+
 ```
 
 
