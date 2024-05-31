@@ -1,4 +1,13 @@
 # ITO_TAP_U4_SISTEMABANCO
+
+## Requisitos Previos Para El Correcto Funcionamiento Del Codigo
+
+1. Instala XAMPP y crea la base de datos banco.
+2. Instala NetBeans 15 y crea un nuevo proyecto Java.
+3. Descarga y agrega mysql-connector-java-5.1.46.jar a tu proyecto en NetBeans.
+4. Configura la conexión a la base de datos usando JDBC.
+5. Prueba la conexión con un ejemplo de inserción de datos.
+
 ## Descripción
 
 En la implementación del Sistema Modelo Vista Controlador (MVC) denominado "banco", se ha desarrollado una aplicación que facilita la gestión completa de usuarios, incluyendo clientes, ejecutivos y gerentes, a través de cuentas dedicadas para cada tipo de usuario. Todos los datos de usuarios, ejecutivos y gerentes se almacenan de forma segura en una base de datos. Cada tipo de usuario tiene sus propios datos, gestionados de forma separada dentro del modelo de la aplicación, lo que permite una gestión eficiente de la información y una clara separación de responsabilidades entre los diferentes tipos de usuarios.
@@ -754,5 +763,7 @@ consulta.executeUpdate();
 6. **javax.activation.FileDataSource:** Implementación de DataSource que encapsula un archivo.
 
 
+
+   
 
 
