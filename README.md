@@ -554,8 +554,6 @@ try {
 
 ```
 
-
-
 ## Ventana De Tramites
 ![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/5adae539-37e7-4b54-a218-93a9cb58fda3)
 
@@ -566,8 +564,6 @@ try {
 
 
 ```
-
-
 **Preparación y ejecución de consultas SQL:** Se está preparando y ejecutando una consulta SQL para seleccionar datos de la tabla "cliente" donde el campo "id_cliente" sea igual al valor proporcionado en un campo de texto llamado "jTextField11".
 
 ```java
@@ -578,34 +574,15 @@ ResultSet rs = consulta.executeQuery();
 
 ```
 
-
-**Generar el contrato PDF y enviar el correo electrónico:** Se genera un número de documento aleatorio, se crea el contrato en formato PDF y, si se genera correctamente, se prepara y envía un correo electrónico con el contrato adjunto.
-
-```java
-        numerodocumento = (int)(Math.random() * (max - min + 1)) + min;
-    String contratoPDF = generarContratoPDF("contrato_bancario.pdf");
-
-    if (contratoPDF != null) {
-        createEmail();
-        sendEmail();
-    } else {
-        JOptionPane.showMessageDialog(null, "Error al generar el contrato bancario.");
-    }
-
-```
-
-
 **Extracción de datos y llenado de campos de texto::** Se están extrayendo datos del ResultSet y estableciendo el texto en varios campos de texto en la interfaz de usuario
 
 ```java
    txtNombre.setText(rs.getString("nombre"));
 
-  
-
 ```
 
 
-**Generación de valores aleatorios para una nueva tarjeta:**Se prepara y ejecuta una consulta para insertar una nueva fila en la tabla "tarjeta". Se establecen los valores de las columnas utilizando los valores aleatorios generados anteriormente. 
+**Generación de valores aleatorios para una nueva tarjeta:** Se prepara y ejecuta una consulta para insertar una nueva fila en la tabla "tarjeta". Se establecen los valores de las columnas utilizando los valores aleatorios generados anteriormente. 
 
 ```java
       PreparedStatement consulta3 = conexion.prepareStatement("INSERT INTO tarjeta (credito, tarjetaCredito, limite) VALUES (?, ?, ?)");
@@ -613,8 +590,6 @@ consulta3.setBoolean(1, true);
 consulta3.setLong(2, numeroTarjeta);
 consulta3.setInt(3, limiteAleatorio);
 int filasAfectadas = consulta3.executeUpdate();
-
-
 
 ```
 
@@ -629,17 +604,154 @@ int filasAfectadas = consulta3.executeUpdate();
 
 ```
 
+## Alta De Ejecutivo y Gerente
+**Solo cambian el nombre de las variables en ambos codigos pero en si estan echos basados en el mismo principio**
+
+![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/f4e8f365-3dbc-4366-9fae-a21d9888b173) ![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/a78d88de-5d24-4914-9c9c-69dbc9f77401)
+
+
+**Obtención y limpieza de datos del formulario:** Aquí se obtienen los datos ingresados por el usuario en los campos de texto (jTextField14, jTextField13, jTextField15, jTextField16, jTextField17, jPasswordField3) y se eliminan espacios en blanco al inicio y final.
+```java
+String nombreEjecutivo = jTextField14.getText().trim();
+String apellidoPaternoEje = jTextField13.getText().trim();
+String apellidoMaternoEje = jTextField15.getText().trim();
+String telefono = jTextField16.getText().trim();
+String correoElectronico = jTextField17.getText().trim();
+int clave = Integer.parseInt(jPasswordField3.getText().trim());
+
+
+```
+
+**Generación de un salario aleatorio:** Se genera un salario aleatorio entre 2000 y 20000 usando la función Math.random().
+
+```java
+double salario = 2000 + Math.random() * (20000 - 2000);
+
+
+```
+
+**Obtención de la fecha actual:** Se obtiene la fecha actual y se formatea en el formato "YYYY-MM-DD".
 
 
 
+```java
+     Date fechaActual = new Date();
+SimpleDateFormat formatoFecha = new SimpleDateFormat("yyyy-MM-dd");
+String fechaRegistro = formatoFecha.format(fechaActual);
 
 
 
+```
+
+**Selección de un departamento aleatorio::**
+```java
+String[] departamentos = {"Ventas", "Operaciones", "Recursos Humanos", "Finanzas", "Marketing"};
+Random random = new Random();
+int indiceAleatorio = random.nextInt(departamentos.length);
+String seleccionAleatoria = departamentos[indiceAleatorio];
+
+```
+
+**Generación de una clave aleatoria y selección de una sucursal aleatoria:**
+```java
+int min = 100000;
+int max = 999999;
+int claveAleatoria = random.nextInt((max - min) + 1) + min;
+int idsucursal = random.nextInt(3) + 1;
 
 
 
+```
+
+**Validación del correo electrónico:** Se valida el correo electrónico usando la función validarCorreo. Si el correo no es válido, se muestra un mensaje de error y se detiene la ejecución.
+```java
+
+if (!validarCorreo(correoElectronico)) {
+    JOptionPane.showMessageDialog(null, "Los datos ingresados son inválidos.");
+    return;
+}
+
+```
+
+**Conexión a la base de datos y preparación de la consulta:** Se establece una conexión a la base de datos MySQL y se prepara una consulta SQL para insertar los datos en la tabla gerente
+```java
+
+Connection conexion = DriverManager.getConnection("jdbc:mysql://localhost/banco", "root", "");
+PreparedStatement consulta = conexion.prepareStatement("INSERT INTO gerente (id, nombreEjecutivo, apellidoPaternoEje, apellidoMaternoEje, correoElectronico, telefono, fechaRegistro, salario, departamento, idSucursal, clave) VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)");
+
+```
+
+**Establecimiento de parámetros de la consulta:** Se ejecuta la consulta para insertar los datos en la base de datos.
+```java
+consulta.setInt(1, 0);  // Asumiendo que el campo 'id' es autoincremental, este valor se ignorará
+consulta.setString(2, nombreEjecutivo);
+consulta.setString(3, apellidoPaternoEje);
+consulta.setString(4, apellidoMaternoEje);
+consulta.setString(5, correoElectronico);
+consulta.setString(6, telefono);
+consulta.setString(7, fechaRegistro);
+consulta.setDouble(8, salario);
+consulta.setString(9, seleccionAleatoria);
+consulta.setInt(10, idsucursal);
+consulta.setInt(11, clave);
+
+```
+
+**Ejecucion De Consulta:** 
+```java
+consulta.executeUpdate();
+```
+
+## Explicacion de Librerias 
+
+   ## Librerías de iText
+         Estas librerías se utilizan para crear y manipular documentos PDF:
+
+1. **com.itextpdf.text.Document**: Representa un documento PDF.
+2. **com.itextpdf.text.DocumentException:** Maneja excepciones relacionadas con el manejo de documentos PDF.
+3. **com.itextpdf.text.Font:** Define estilos y tamaños de fuente.
+4. **com.itextpdf.text.FontFactory:** Facilita la creación de objetos Font.
+5. **com.itextpdf.text.Paragraph:** Representa un párrafo en un documento PDF.
+6. **com.itextpdf.text.pdf.AcroFields:** Maneja los campos de un formulario en un documento PDF.
+7. **com.itextpdf.text.pdf.PdfReader:** Lee documentos PDF existentes.
+8. **com.itextpdf.text.pdf.PdfStamper:** Permite modificar y agregar contenido a un documento PDF existente.
+9. **com.itextpdf.text.pdf.PdfWriter: * *Escribe el contenido del documento en un archivo PDF.
 
 
+   ## Librerías de MySQL
+      Estas librerías se utilizan para interactuar con una base de datos MySQL:
+
+1. **com.mysql.jdbc.Statement:** Ejecuta sentencias SQL (consulta, actualización).
+2. **java.sql.Connection:** Establece una conexión con la base de datos.
+3. **java.sql.DriverManager:** Gestiona los controladores de la base de datos y establece conexiones.
+4. **java.sql.PreparedStatement:** Representa una sentencia SQL precompilada.
+5. **java.sql.SQLException:** Maneja las excepciones relacionadas con la base de datos.
+6. **java.sql.ResultSet:** Representa el resultado de una consulta a la base de datos.
+
+  ## Librerías de Java para GUI y manejo de excepciones
+      Estas librerías se utilizan para crear interfaces gráficas de usuario y manejar excepciones:
+
+1. **javax.swing.*:** Proporciona clases para crear interfaces gráficas de usuario (botones, campos de texto, etc.).
+2. **java.io.File:** Maneja archivos y directorios.
+3. **java.io.FileOutputStream:** Permite la escritura de datos en un archivo.
+4. **java.io.IOException:** Maneja las excepciones de entrada/salida.
+5. **java.text.SimpleDateFormat:** Proporciona una forma de formatear y analizar fechas.
+6. **java.util.Date:** Representa una fecha y hora específicas.
+7. **java.util.regex.Matcher:** Coincide un patrón regular con una secuencia de caracteres.
+8. **java.util.regex.Pattern:** Define un patrón de expresiones regulares.
+9. **java.util.logging.Level:** Define niveles de logging.
+10.  **java.util.logging.Logger:** Proporciona capacidades de logging.
+
+ # Librerías de JavaMail
+    
+         Estas librerías se utilizan para enviar correos electrónicos:
+
+1. **java.util.Properties:** Proporciona una estructura de datos para almacenar pares clave-valor, usado aquí para configurar las propiedades del correo.
+2. **javax.mail.*:** Proporciona clases y interfaces para manejar correos electrónicos.
+3. **javax.mail.internet.*:** Proporciona clases para crear y analizar mensajes de correo electrónico en el formato de Internet.
+4. **javax.activation.DataHandler:** Maneja datos MIME.
+5. **javax.activation.DataSource:** Representa una fuente de datos.
+6. **javax.activation.FileDataSource:** Implementación de DataSource que encapsula un archivo.
 
 
 
