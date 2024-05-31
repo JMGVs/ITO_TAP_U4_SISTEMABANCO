@@ -470,8 +470,7 @@ try {
     );
 
 ```
-## Tramite
-![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/5adae539-37e7-4b54-a218-93a9cb58fda3)
+
 
 **Rellenar y ejecutar la consulta de cliente:** Se rellenan los valores en la consulta de cliente y se ejecuta la inserción. Luego se obtiene el id_cliente generado automáticamente.
 
@@ -558,7 +557,7 @@ try {
 
 
 ## Ventana De Tramites
-
+![image](https://github.com/JMGVs/ITO_TAP_U4_SISTEMABANCO/assets/168394248/5adae539-37e7-4b54-a218-93a9cb58fda3)
 
 **Establecimiento de la conexión a la base de datos:** Aquí se está estableciendo una conexión a una base de datos MySQL llamada "banco" en el localhost (la misma máquina donde se está ejecutando el código). Se está utilizando el usuario "root" sin contraseña
 
